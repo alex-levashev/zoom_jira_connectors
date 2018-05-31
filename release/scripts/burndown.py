@@ -22,41 +22,75 @@ today_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
 ############# FILTER01 #############
 
-filter01 = '(issuetype = Bug AND status not in (Closed) AND "Discovered During" = customer AND "Epic Link" IS EMPTY AND ("Design Issue" !=Yes OR "Design Issue" is EMPTY) AND (labels not in ("ZOOMonZOOM") or labels is EMPTY)) OR ((issuetype not in (Epic, Story,Bug) AND status not in (Closed) AND "Discovered During" = customer AND "Epic Link" IS EMPTY AND (labels not in ("ZOOMonZOOM") or labels is EMPTY)))'
-filter02 = '"Discovered During" = customer AND status = "In Test"'
+filter01 = 'fixVersion = ZOOM-6.4.0 AND issuetype in (Story, Bug, "Technical Task") AND labels in (Team:UA, Team:ENC, Team:TheBazaar, scopic, devops) AND status != Closed'
+
 
 def time_count_per_filter( filter ):
     issues = jira.search_issues(filter, maxResults=1000)
     issues_total_hours = 0
     for issue in issues:
-        print issue, issue.fields.customfield_11506
-        if str(issue.fields.customfield_11506) == "S":
+        if (str(issue.fields.customfield_11506) == "S") & ("Team:UA" in issue.fields.labels):
+            issues_total_hours += 3
+        if (str(issue.fields.customfield_11506) == "S") & ("Team:ENC" in issue.fields.labels):
             issues_total_hours += 2
-        if str(issue.fields.customfield_11506) == "M":
+        if (str(issue.fields.customfield_11506) == "S") & ("Team:TheBazaar" in issue.fields.labels):
+            issues_total_hours += 2
+        if (str(issue.fields.customfield_11506) == "S") & ("scopic" in issue.fields.labels):
+            issues_total_hours += 2
+        if (str(issue.fields.customfield_11506) == "S") & ("devops" in issue.fields.labels):
+            issues_total_hours += 5
+
+        if (str(issue.fields.customfield_11506) == "M") & ("Team:UA" in issue.fields.labels):
+            issues_total_hours += 10
+        if (str(issue.fields.customfield_11506) == "M") & ("Team:ENC" in issue.fields.labels):
+            issues_total_hours += 5
+        if (str(issue.fields.customfield_11506) == "M") & ("Team:TheBazaar" in issue.fields.labels):
+            issues_total_hours += 5
+        if (str(issue.fields.customfield_11506) == "M") & ("scopic" in issue.fields.labels):
             issues_total_hours += 7
-        if str(issue.fields.customfield_11506) == "L":
+        if (str(issue.fields.customfield_11506) == "M") & ("devops" in issue.fields.labels):
+            issues_total_hours += 9
+
+        if (str(issue.fields.customfield_11506) == "L") & ("Team:UA" in issue.fields.labels):
+            issues_total_hours += 20
+        if (str(issue.fields.customfield_11506) == "L") & ("Team:ENC" in issue.fields.labels):
+            issues_total_hours += 10
+        if (str(issue.fields.customfield_11506) == "L") & ("Team:TheBazaar" in issue.fields.labels):
+            issues_total_hours += 10
+        if (str(issue.fields.customfield_11506) == "L") & ("scopic" in issue.fields.labels):
             issues_total_hours += 14
-        if str(issue.fields.customfield_11506) == "XL":
+        if (str(issue.fields.customfield_11506) == "L") & ("devops" in issue.fields.labels):
+            issues_total_hours += 13
+
+        if (str(issue.fields.customfield_11506) == "XL") & ("Team:UA" in issue.fields.labels):
+            issues_total_hours += 45
+        if (str(issue.fields.customfield_11506) == "XL") & ("Team:ENC" in issue.fields.labels):
+            issues_total_hours += 20
+        if (str(issue.fields.customfield_11506) == "XL") & ("Team:TheBazaar" in issue.fields.labels):
+            issues_total_hours += 20
+        if (str(issue.fields.customfield_11506) == "XL") & ("scopic" in issue.fields.labels):
             issues_total_hours += 30
-        if str(issue.fields.customfield_11506) == "XXL":
-            issues_total_hours += 70
-    # print issues_total_hours
+        if (str(issue.fields.customfield_11506) == "XL") & ("devops" in issue.fields.labels):
+            issues_total_hours += 24
+
+
+        if (str(issue.fields.customfield_11506) == "XXL") & ("Team:UA" in issue.fields.labels):
+            issues_total_hours += 100
+        if (str(issue.fields.customfield_11506) == "XXL") & ("Team:ENC" in issue.fields.labels):
+            issues_total_hours += 50
+        if (str(issue.fields.customfield_11506) == "XXL") & ("Team:TheBazaar" in issue.fields.labels):
+            issues_total_hours += 80
+        if (str(issue.fields.customfield_11506) == "XXL") & ("scopic" in issue.fields.labels):
+            issues_total_hours += 90
+        if (str(issue.fields.customfield_11506) == "XXL") & ("devops" in issue.fields.labels):
+            issues_total_hours += 56
+
     return issues_total_hours
 
-xx = time_count_per_filter(filter02)
-print xx
-
-
-# for field_name in issues:
-#     print "Field:", field_name, "Value:", field_name.__dict__;
-
-
-# if os.path.isfile('../data/filter01.txt') == True:
-#     with open('../data/filter01.txt', 'a') as file:
-#         file.write(today_date+','+str(jira.search_issues(filter01, maxResults=1000).total)+'\n')
-# else:
-#     with open('../data/filter01.txt', 'w') as file:
-#         file.write('Date,"Issues"\n')
-#         file.write(today_date+','+str(jira.search_issues(filter01, maxResults=1000).total)+'\n')
-
-############# END OF FILTER01 #############
+if os.path.isfile('../data/burndown.txt') == True:
+    with open('../data/burndown.txt', 'a') as file:
+        file.write(today_date+',' + str(time_count_per_filter(filter01)) + '\n')
+else:
+    with open('../data/burndown.txt', 'w') as file:
+        file.write('Date,Count\n')
+        file.write(today_date+',' + str(time_count_per_filter(filter01)) + '\n')

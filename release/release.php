@@ -3,7 +3,6 @@
 
 <head>
 	<title>Release Info Page</title>
-	<!-- <meta http-equiv="refresh" content="30"> -->
 	<link rel="shortcut icon" href="favicon.gif" type="image/gif">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,8 +22,8 @@
 	<div class="container col-sm-12">
 	  <div class="page-header">
 			<?php
-			$tag = '6.3.0';
-			$epics = ['CAL-17536', 'CAL-17486', 'CAL-17520', 'CAL-17558', 'CAL-17636', 'CAL-17649'];
+			$tag = 'ZOOM-6.4.0';
+			$epics = ['ENC-3895', 'ENC-3802', 'CAL-17845', 'SC-10346', 'ENC-3961', 'DEVOPS-1642'];
 			echo '<h3 class="text-center">' . $tag . ' Release Info Page</h3>';
 			?>
 		</div>
@@ -74,13 +73,15 @@
 			      yAxes: [{
 			        stacked: true,
 			        ticks: {
-			          beginAtZero: true
+			          beginAtZero: true,
 			        }
 			      }],
 			      xAxes: [{
 			        stacked: true,
 			        ticks: {
 			          beginAtZero: true,
+								max: d,
+								stepSize: e
 			        }
 			      }]
 
@@ -95,7 +96,7 @@
 			  data: {
 			    labels: glabels,
 			    datasets: [{
-			      label: "Points",
+			      label: "Days",
 			      data: gdata,
 						borderColor: 'green',
 						backgroundColor: 'white',
@@ -106,7 +107,7 @@
 			  options: {
 			    scales: {
 			      xAxes: [{
-			        type: 'time',
+							type: 'time',
 			        time: {
 			          displayFormats: {
 			          	'millisecond': 'YYYY-MM-DD',
@@ -118,9 +119,15 @@
 			            'month': 'YYYY-MM-DD',
 			            'quarter': 'YYYY-MM-DD',
 			            'year': 'YYYY-MM-DD',
-			          }
+			          },
+								max: '2018-08-16'
 			        }
 			      }],
+						yAxes:[{
+                ticks: {
+                    suggestedMin: 0,
+                }
+            }],
 			    },
 			  }
 			};
@@ -174,12 +181,31 @@
 				$issue_list_decoded=json_decode($issue_list);
 
 				$t_shirt_sizes_total_value = 0;
-				$t_shirt_sizes = array( "S"=>"2", "M"=>"7", "L"=>"14", "XL"=>"30","XXL"=>"70");
-				// print_r($issue_list_decoded);
+
+				$t_shirt_sizes_scopic = array( "S"=>"2", "M"=>"7", "L"=>"14", "XL"=>"30","XXL"=>"90");
+				$t_shirt_sizes_baz = array( "S"=>"2", "M"=>"5", "L"=>"10", "XL"=>"20","XXL"=>"80");
+				$t_shirt_sizes_ua = array( "S"=>"3", "M"=>"10", "L"=>"20", "XL"=>"45","XXL"=>"100");
+				$t_shirt_sizes_enc = array( "S"=>"2", "M"=>"5", "L"=>"10", "XL"=>"20","XXL"=>"50");
+				$t_shirt_sizes_devops = array( "S"=>"5", "M"=>"9", "L"=>"13", "XL"=>"24","XXL"=>"56");
+
 				foreach($issue_list_decoded->issues as $i) {
 					$t_shirt_size_letter = $i->fields->customfield_11506->value;
-					$t_shirt_size_value = $t_shirt_sizes[$t_shirt_size_letter];
-					$t_shirt_sizes_total_value = $t_shirt_sizes_total_value + $t_shirt_size_value;
+					$labels_array = $i->fields->labels;
+					foreach ($labels_array as $value) {
+							if ( $value == "scopic" ) {
+								$t_shirt_size_value = $t_shirt_sizes_scopic[$t_shirt_size_letter];
+							} elseif ( $value == "Team:TheBazaar" ) {
+								$t_shirt_size_value = $t_shirt_sizes_baz[$t_shirt_size_letter];
+							} elseif ( $value == "Team:UA" ) {
+								$t_shirt_size_value = $t_shirt_sizes_ua[$t_shirt_size_letter];
+							} elseif ( $value == "Team:ENC" ) {
+								$t_shirt_size_value = $t_shirt_sizes_enc[$t_shirt_size_letter];
+							} elseif ( $value == "devops" ) {
+								$t_shirt_size_value = $t_shirt_sizes_devops[$t_shirt_size_letter];
+							}
+					}
+
+					$t_shirt_sizes_total_value += $t_shirt_size_value;
 				}
 				return $t_shirt_sizes_total_value;
 			}
@@ -197,7 +223,7 @@
 				return $issue_summary;
 			}
 
-			function draw_graph($filter1, $filter2, $filter3, $username, $password, $graph_name, $graph_label, $height, $cols) {
+			function draw_graph($filter1, $filter2, $filter3, $username, $password, $graph_name, $graph_label, $height, $cols, $stepsize) {
 				$count1 = issues_count($filter1, $username, $password);
 				$count2 = issues_count($filter2, $username, $password);
 				$count3 = issues_count($filter3, $username, $password);
@@ -210,6 +236,8 @@
 				echo 'var b = "' . $count2 . '";';
 				echo 'var c = "' . $count3 . '";';
 				echo 'var gn = "' . $graph_name . '";';
+				echo 'var d = ' . (intval($count1) + intval($count2) + intval($count3)) . ';';
+				echo 'var e = "' . $stepsize . '";';
 				echo 'draw_graph_js()';
 				echo '</script>';
 			}
@@ -249,31 +277,28 @@
 
 			// GRAPH FOR MAIN RELEASE
 
-			$request_done = 'project in (CAL, ENC, SC, IP) AND issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status = Closed AND fixVersion = ' . $tag;
-			$request_inprogress = 'project in (CAL, ENC, SC, IP) AND issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status in ("In Progress", Returned, "Ready for Test", "In Test", "Ready for Acceptance", Waiting, "Ready for development") AND fixVersion = ' . $tag;
-			$request_todo = 'project in (CAL, ENC, SC, IP) AND issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status = Open AND fixVersion = ' . $tag;
-      //
-			draw_graph($request_done, $request_inprogress, $request_todo, $username, $password, "Release", "Whole Release Progress", 10, 12);
+			$request_done = 'issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status = Closed AND fixVersion = ' . $tag;
+			$request_inprogress = 'issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status in ("In Progress", Returned, "Ready for Test", "In Test", "Ready for Acceptance", Waiting) AND fixVersion = ' . $tag;
+			$request_todo = 'issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status in ("Open", "Ready for development") AND fixVersion = ' . $tag;
+
+			draw_graph($request_done, $request_inprogress, $request_todo, $username, $password, "Release", "Whole Release Progress", 10, 12, 10);
 
 			// GRAPHS FOR EPICS
 
-
 			foreach ($epics as $key => $value) {
-				$request_done = 'project in (CAL, ENC, SC, IP) AND issuetype = Story AND status = Closed AND fixVersion = ' . $tag . ' AND cf[11090] = ' . $value;
-				$request_inprogress = 'project in (CAL, ENC, SC, IP) AND issuetype = "Documentation Task" AND status in ("In Progress", Returned, "Ready for Test", "In Test", "Ready for Acceptance", Waiting, "Ready for development") AND fixVersion = ' . $tag . ' AND cf[11090] = ' . $value;
-				$request_todo = 'project in (CAL, ENC, SC, IP) AND issuetype = "Technical Task" AND status = Open AND fixVersion = ' . $tag . ' AND cf[11090] = ' . $value;
 
-				draw_graph($request_done, $request_inprogress, $request_todo, $username, $password, $value, issue_title($value, $username, $password), 15, 6);
+				$request_done = 'issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status = Closed AND fixVersion = ' . $tag . ' AND cf[11090] = ' . $value;
+				$request_inprogress = 'issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status in ("In Progress", Returned, "Ready for Test", "In Test", "Ready for Acceptance", Waiting) AND fixVersion = ' . $tag . ' AND cf[11090] = ' . $value;
+				$request_todo = 'issuetype in (Bug, "Documentation Task", Story, "Technical Task") AND status in ("Open", "Ready for development") AND fixVersion = ' . $tag . ' AND cf[11090] = ' . $value;
+
+				draw_graph($request_done, $request_inprogress, $request_todo, $username, $password, $value, issue_title($value, $username, $password), 15, 6, 1);
 
 			}
 
 			// BURNDONW CHART
 
-			draw_burn("/var/www/html/charts/data/mt_stats_inout.txt", "Burndown Chart1", "Burndown Chart1", 6);
-			draw_burn("/var/www/html/charts/data/mt_stats_inout.txt", "Burndown Chart2", "Burndown Chart2", 6);
+			draw_burn("/var/www/html/release/data/burndown.txt", "Burndown Chart - Release 6.4.0", "Burndown Chart - Release 6.4.0", 12);
 
-			// $xx = issues_count_hours('"Discovered During" = customer AND status = "In Test"',$username,$password);
-			// echo $xx;
 		?>
 
 	</div>

@@ -9,5 +9,5 @@ function Redirect($url, $permanent = false)
     exit();
 }
 
-Redirect('http://10.17.1.60/charts/', true);
+Redirect('http://10.17.1.60/mt/', true);
 ?>
