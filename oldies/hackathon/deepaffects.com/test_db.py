@@ -25,11 +25,11 @@ cur = db.cursor()
 
 	
 # Insert data into table
-#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('0', 'MyLogin0', 'Alexey', 'NoWhere', 'NoCity')")
-#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('1', 'MyLogin1', 'Alexey', 'NoWhere', 'NoCity')")
-#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('2', 'MyLogin2', 'Alexey', 'NoWhere', 'NoCity')")
-#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('3', 'MyLogin3', 'Alexey', 'NoWhere', 'NoCity')")
-#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('4', 'MyLogin4', 'Alexey', 'NoWhere', 'NoCity')")
+#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('0', 'levashev0', 'Alexey', 'NoWhere', 'NoCity')")
+#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('1', 'levashev1', 'Alexey', 'NoWhere', 'NoCity')")
+#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('2', 'levashev2', 'Alexey', 'NoWhere', 'NoCity')")
+#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('3', 'levashev3', 'Alexey', 'NoWhere', 'NoCity')")
+#cur.execute("INSERT INTO Persons (PersonID, LastName, FirstName, Address, City) VALUES ('4', 'levashev4', 'Alexey', 'NoWhere', 'NoCity')")
 
 cur.execute("SELECT * FROM Persons;")
 print "Before inserting : " + str(cur.rowcount)

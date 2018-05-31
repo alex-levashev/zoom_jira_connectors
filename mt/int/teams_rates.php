@@ -183,7 +183,7 @@ $zoom_team = [
 'kuhn'                  => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],
 'kuzel'                 => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'In', 'type' => 'QA', 'team' => 'Autosiders'],
 'laurinec'              => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],
-'MyLogin'              => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],
+'levashev'              => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],
 'lgtv1'                 => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],
 'lgtv2'                 => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],
 'lgtv3'                 => ['rate' => 0000, 'hours' => 0, 'cost' => 0, 'full_name' => '', 'location' => 'NA', 'type' => 'NA', 'team' => 'NA'],

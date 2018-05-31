@@ -67,7 +67,7 @@ function GetReminderList ($token, $api) {
 	echo "</table>";
 
 }
-echo '<div class="well"><h1>Alexey MyLogin - Reminders</h1></div>';
+echo '<div class="well"><h1>Alexey levashev - Reminders</h1></div>';
 GetReminderList($token, $api);
 
 

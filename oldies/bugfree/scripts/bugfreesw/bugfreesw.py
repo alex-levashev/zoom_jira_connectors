@@ -41,11 +41,11 @@ else:
         file.write('Date,"L - Opened","L - Closed","M - Opened","M - Closed","S - Opened","S - Closed","Total cost","Balance"\n')
         file.write(today_date+','+str(jira.search_issues(filter01, maxResults=1000).total)+','+str(jira.search_issues(filter02, maxResults=1000).total)+','+str(jira.search_issues(filter03, maxResults=1000).total)+','+str(jira.search_issues(filter04, maxResults=1000).total)+','+str(jira.search_issues(filter05, maxResults=1000).total)+','+str(jira.search_issues(filter06, maxResults=1000).total)+','+str(Total_cost)+','+str(Balance)+'\n')
 
-sender = 'alexey.MyLogin@zoomint.com'
-receivers = ['alexey.MyLogin@zoomint.com']
+sender = 'alexey.levashev@zoomint.com'
+receivers = ['alexey.levashev@zoomint.com']
 
-message = """"From: Robot <alexey.MyLogin@zoomint.com>
-To: To Person <alexey.MyLogin@zoomint.com>
+message = """"From: Robot <alexey.levashev@zoomint.com>
+To: To Person <alexey.levashev@zoomint.com>
 Subject: BugFree Software Information Email
 Total cost of the bugs in progress and closed is : """ + str(Total_cost) + """
 Money to spent : """ + str(Balance) + """

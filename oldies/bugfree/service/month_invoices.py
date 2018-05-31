@@ -7,7 +7,7 @@ from dateutil import parser
 now = datetime.datetime.now()
 
 jira_server = "http://jira:81"
-jira_user = "MyLogin"
+jira_user = "levashev"
 jira_password = "MyPass"
 
 jira_server = {'server': jira_server}

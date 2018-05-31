@@ -1,5 +1,5 @@
 AuthType Basic
-AuthName "No go! Ask Alexey MyLogin for permissions!"
+AuthName "No go! Ask Alexey levashev for permissions!"
 AuthUserFile /var/www/html/mt/.htpasswd
 Require valid-user
 
